@@ -95,7 +95,7 @@ public class MainScreenController {
             String phone = names[1];
 
 
-            int customerID = generateCustomerNumber();
+            String customerID = generateCustomerNumber(fName, phone);
             if (!fName.isEmpty() && !phone.isEmpty()) {
                 Customer customer = new Customer(customerID, fName, phone, 0); // Standard ticket nummer indtil det genereres af ticketHandler
                 TicketHandler.ticketGeneration(customer);
@@ -103,9 +103,11 @@ public class MainScreenController {
         });
     }
 
-
-    private static int generateCustomerNumber() {
-        return (int)(Math.random() * 10000);
+    // Metoder der laver vores customer nummer
+    public static String generateCustomerNumber(String fName, String phone) {
+        //Tager 2 første bogstaver fra vores navn og sidste 4 cifre/bogstaver fra vores telefonnummer
+        String firstNamePart = fName.substring(0, 2).toLowerCase(); // Sikre at alt står med småt.
+        String phonePart = phone.substring(phone.length() - 4).toLowerCase();
+        return firstNamePart + phonePart;
     }
-
 }

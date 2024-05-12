@@ -3,7 +3,7 @@ package com.example.iwardrobefx;
 public class Customer {
 
 
-    public int customerID;
+    public String customerID;
     public String firstName;
     public String phoneNumber;
     public int ticketNumber;
@@ -12,14 +12,14 @@ public class Customer {
 
 
 
-    public Customer(int customerID, String firstName, String phoneNumber, int ticketNumber) {
+    public Customer(String customerID, String firstName, String phoneNumber, int ticketNumber) {
         this.customerID = customerID;
         this.firstName = firstName;
         this.phoneNumber = phoneNumber;
         this.ticketNumber = ticketNumber;
     }
 
-    public int getCustomerID() {
+    public String getCustomerID() {
         return customerID;
     }
     public String getFirstName() {
