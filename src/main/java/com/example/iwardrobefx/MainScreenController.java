@@ -12,8 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 
 public class MainScreenController {
@@ -99,6 +100,16 @@ public class MainScreenController {
             if (!fName.isEmpty() && !phone.isEmpty()) {
                 Customer customer = new Customer(customerID, fName, phone, 0); // Standard ticket nummer indtil det genereres af ticketHandler
                 TicketHandler.ticketGeneration(customer);
+                FileIO.saveUserLastTicketNumber(customer);
+
+                // Viser dialog med en lille velkommen besked.
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Velkommen!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Velkommen " + fName + "! Dit kø nummer er " + customer.getTicketNumber() + ".");
+                    alert.showAndWait();
+                });
             }
         });
     }

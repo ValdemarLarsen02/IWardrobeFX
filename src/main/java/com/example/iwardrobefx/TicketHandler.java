@@ -11,10 +11,6 @@ public class TicketHandler {
         int ticketNumber = generateTicketNumber();
         customer.ticketNumber = ticketNumber;
 
-        // kald gemt customer til csv fil
-
-        System.out.println("Ticket number generated: " + customer.customerID);
-        // Lige pt printer den bare her skal vi opdatere til customeren.
         System.out.println("Ticket number " + ticketNumber + " has been generated for " + customer.firstName);
     }
 
