@@ -8,6 +8,7 @@ import java.util.List;
 public class FileIO {
     private static String customerDataPath = "data/CustomerData.csv";
     private static String allTimeCustomerData = "data/AllTimeCustomerData.csv";
+    private static String adminDataPath = "data/AdminData.csv";
     ErrorHandler er = new ErrorHandler();
 
     public void saveCustomerData(Customer customer, ArrayList<Customer> customers) {
@@ -134,6 +135,38 @@ public class FileIO {
             System.out.println("Failed to remove customer.");
         }
     }
+    /*
+    public void generateAdminCode(Company company) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(adminDataPath, true))) {
+            int adminCode = (int) (Math.random() * 10000);
+            pw.println(company.getName() + ": Admin Code: " + adminCode);
+        } catch (IOException e) {
+            er.generateAdminCodeError();
+        }
+    }
+    */
+    public static Company adminLogin(int adminCode) {
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(adminDataPath))) {
+            br.readLine(); // Spring over header-linjen
+            while ((line = br.readLine()) != null) {
+                String[] userData = line.split(",");
+                if (userData.length >= 3) {
+                    int code = Integer.parseInt(userData[1].trim());
+                    if (code == adminCode) {
+                        String firmName = userData[0].trim();
+                        int capacity = Integer.parseInt(userData[2].trim());
+                        return new Company(capacity, firmName);
+                    }
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            // Her skal vores errorhandler bruges.
+        }
+        return null; // vi returner bare null hvis koden ikke findes.. håndteres over i vores controller.
+    }
+
+
 
     //Generate Admin code
     //Get Admin Code

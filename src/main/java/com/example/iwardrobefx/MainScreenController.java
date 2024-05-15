@@ -1,29 +1,20 @@
 package com.example.iwardrobefx;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 
-import javafx.scene.control.TextInputDialog;
 
 
 import java.util.Optional;
 import javafx.application.Platform;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.application.Application;
-import javafx.scene.Scene;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.layout.VBox;
+
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class MainScreenController {
 
@@ -44,19 +35,18 @@ public class MainScreenController {
         passwordField.setVisible(!passwordField.isVisible());
         passwordText.setVisible(!passwordText.isVisible());
 
-
         //LAver en lytter til når der trykkes enter når bruger har fokus på password feltet.
         passwordField.setOnAction(event -> {
             String password = passwordField.getText();
-            System.out.println("Password indtastet: " + password);
 
+            String passCheck = String.valueOf(FileIO.adminLogin(Integer.parseInt(password)));
 
-            if (password.equals("skum1")) {
-                System.out.println("Password indtastet OK");
-            } else {
+            if (passCheck == null) {
                 passwordTextWrong.setVisible(true);
+            } else {
+                passwordTextWrong.setVisible(false);
+                System.out.println("Sender bruger videre til admin siden her .." + Company.getName());
             }
-
 
         });
 

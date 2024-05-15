@@ -23,4 +23,12 @@ public class ErrorHandler {
         System.out.println("An error occurred while removing customers from customerData.csv");
     }
 
+    public void generateAdminCodeError(){
+        System.out.println("An error occurred while generating admin code");
+    }
+
+    public void adminLogin(){
+        System.out.println("An error occurred while logging in as admin");
+    }
+
 }

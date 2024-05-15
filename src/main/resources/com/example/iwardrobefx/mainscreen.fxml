@@ -48,13 +48,13 @@
                       <Font name="System Bold" size="29.0" />
                   </font>
               </Button>
-              <Text fx:id="passwordText" fill="WHITE" layoutX="1450.0" layoutY="518.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log på admin panel her:" textAlignment="CENTER" visible="false" wrappingWidth="237.18359375">
+              <Text fx:id="passwordText" fill="WHITE" layoutX="1429.0" layoutY="555.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log på admin panel her:" textAlignment="CENTER" visible="false" wrappingWidth="273.18359375">
                   <font>
                       <Font name="System Bold" size="19.0" />
                   </font>
               </Text>
-              <PasswordField fx:id="passwordField" layoutX="1438.0" layoutY="524.0" prefHeight="48.0" prefWidth="262.0" visible="false" />
-              <Text fx:id="passwordTextWrong" fill="red" layoutX="1450.0" layoutY="604.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Du har indtastet en ugyldig kode.." textAlignment="CENTER" visible="false" wrappingWidth="237.18359375">
+              <PasswordField fx:id="passwordField" layoutX="1439.0" layoutY="636.0" prefHeight="48.0" prefWidth="262.0" visible="false" />
+              <Text fx:id="passwordTextWrong" fill="red" layoutX="1451.0" layoutY="698.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Du har indtastet en ugyldig kode.." textAlignment="CENTER" visible="false" wrappingWidth="237.18359375">
                   <font>
                       <Font name="System Bold" size="13.0" />
                   </font>
@@ -64,6 +64,7 @@
                       <Font name="System Bold" size="36.0" />
                   </font>
               </Text>
+
           </children>
       </AnchorPane>
 
