@@ -1,5 +1,6 @@
 package com.example.iwardrobefx;
 
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 import javafx.scene.control.TextInputDialog;
@@ -15,7 +16,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class MainScreenController {
 
@@ -24,7 +32,35 @@ public class MainScreenController {
 
 
     public Button createTicket;
+    public Text passwordText;
+    public Text passwordTextWrong;
 
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private void togglePasswordVisibility() {
+        passwordField.setVisible(!passwordField.isVisible());
+        passwordText.setVisible(!passwordText.isVisible());
+
+
+        //LAver en lytter til når der trykkes enter når bruger har fokus på password feltet.
+        passwordField.setOnAction(event -> {
+            String password = passwordField.getText();
+            System.out.println("Password indtastet: " + password);
+
+
+            if (password.equals("skum1")) {
+                System.out.println("Password indtastet OK");
+            } else {
+                passwordTextWrong.setVisible(true);
+            }
+
+
+        });
+
+    }
 
     public void getItem() {
         // Laver en dialog til input af brugerens ticket nr.
@@ -121,4 +157,7 @@ public class MainScreenController {
         String phonePart = phone.substring(phone.length() - 4).toLowerCase();
         return firstNamePart + phonePart;
     }
+
+
+
 }

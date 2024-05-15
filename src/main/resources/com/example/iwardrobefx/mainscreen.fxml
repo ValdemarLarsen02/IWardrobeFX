@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox prefHeight="1074.0" prefWidth="1910.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="com.example.iwardrobefx.MainScreenController">
+<VBox prefHeight="1074.0" prefWidth="1910.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.iwardrobefx.MainScreenController">
   <children>
     <MenuBar style="-fx-background-color: #a3a3a3;" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="Virksomhed">
           <items>
-            <MenuItem id="companyLogin" mnemonicParsing="false" text="Login" />
+            <MenuItem id="companyLogin" mnemonicParsing="false" onAction="#togglePasswordVisibility" text="Login" />
             <MenuItem id="mainScreen" mnemonicParsing="false" text="Tilbage" />
           </items>
         </Menu>
@@ -38,29 +31,41 @@
             <Tooltip text="Virksomheds login" />
          </tooltip>
     </MenuBar>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="953.0" prefWidth="1621.0" style="-fx-background-color: #262626;" VBox.vgrow="ALWAYS">
-         <children>
-            <ImageView fitHeight="1049.0" fitWidth="1222.0" layoutX="1.0" layoutY="-1.0">
-               <image>
-                  <Image url="https://lh5.googleusercontent.com/p/AF1QipMSzuJgopcNx8gX6ZShj5UtNTIHWn_Y9_E39dtb" />
-               </image>
-            </ImageView>
-            <Button onAction="#createTicket" fx:id="createTicket" layoutX="1439.0" layoutY="334.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="262.0" style="-fx-background-color: #404040; -fx-border-radius: 20;" text="Indlever" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="29.0" />
-               </font>
-            </Button>
-            <Button onAction="#getItem" fx:id="getTicket" layoutX="1439.0" layoutY="411.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="262.0" style="-fx-background-color: #404040;" text="Afhent" textAlignment="CENTER" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="29.0" />
-               </font>
-            </Button>
-            <Text fill="WHITE" layoutX="1468.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Velkommen">
-               <font>
-                  <Font name="System Bold" size="36.0" />
-               </font>
-            </Text>
-         </children>
-    </AnchorPane>
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="953.0" prefWidth="1621.0" style="-fx-background-color: #262626;" VBox.vgrow="ALWAYS">
+          <children>
+              <ImageView fitHeight="1049.0" fitWidth="1222.0" layoutX="1.0" layoutY="-1.0">
+                  <image>
+                      <Image url="https://lh5.googleusercontent.com/p/AF1QipMSzuJgopcNx8gX6ZShj5UtNTIHWn_Y9_E39dtb" />
+                  </image>
+              </ImageView>
+              <Button fx:id="createTicket" layoutX="1439.0" layoutY="334.0" mnemonicParsing="false" onAction="#createTicket" prefHeight="43.0" prefWidth="262.0" style="-fx-background-color: #404040; -fx-border-radius: 20;" text="Indlever" textAlignment="CENTER" textFill="WHITE">
+                  <font>
+                      <Font name="System Bold" size="29.0" />
+                  </font>
+              </Button>
+              <Button fx:id="getTicket" layoutX="1439.0" layoutY="411.0" mnemonicParsing="false" onAction="#getItem" prefHeight="43.0" prefWidth="262.0" style="-fx-background-color: #404040;" text="Afhent" textAlignment="CENTER" textFill="WHITE">
+                  <font>
+                      <Font name="System Bold" size="29.0" />
+                  </font>
+              </Button>
+              <Text fx:id="passwordText" fill="WHITE" layoutX="1450.0" layoutY="518.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log på admin panel her:" textAlignment="CENTER" visible="false" wrappingWidth="237.18359375">
+                  <font>
+                      <Font name="System Bold" size="19.0" />
+                  </font>
+              </Text>
+              <PasswordField fx:id="passwordField" layoutX="1438.0" layoutY="524.0" prefHeight="48.0" prefWidth="262.0" visible="false" />
+              <Text fx:id="passwordTextWrong" fill="red" layoutX="1450.0" layoutY="604.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Du har indtastet en ugyldig kode.." textAlignment="CENTER" visible="false" wrappingWidth="237.18359375">
+                  <font>
+                      <Font name="System Bold" size="13.0" />
+                  </font>
+              </Text>
+              <Text fill="WHITE" layoutX="1468.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Velkommen">
+                  <font>
+                      <Font name="System Bold" size="36.0" />
+                  </font>
+              </Text>
+          </children>
+      </AnchorPane>
+
   </children>
 </VBox>
