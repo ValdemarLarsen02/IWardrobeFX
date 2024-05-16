@@ -32,6 +32,7 @@
                   <TableColumn fx:id="navnColumn" prefWidth="90.0" text="Navn" />
                   <TableColumn fx:id="telefonnummerColumn" prefWidth="90.0" text="Telefonnummer" />
                   <TableColumn fx:id="ticketNumberColumn" prefWidth="90.0" text="Ticket Number" />
+                  <TableColumn fx:id="tojtype" prefWidth="90.0" text="Tøj type" />
                 </columns>
               </TableView>
           </children>

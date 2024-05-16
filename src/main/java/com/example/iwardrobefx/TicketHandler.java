@@ -11,7 +11,7 @@ public class TicketHandler {
         int ticketNumber = generateTicketNumber();
         customer.ticketNumber = ticketNumber;
 
-        System.out.println("Ticket number " + ticketNumber + " has been generated for " + customer.firstName);
+        System.out.println("DEBUG: Ticket nummer " + ticketNumber + " er oprettet til: " + customer.firstName);
     }
 
     private static int generateTicketNumber() {

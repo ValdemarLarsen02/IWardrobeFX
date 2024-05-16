@@ -24,6 +24,7 @@ public class AdminPanelController implements Initializable {
 
     public Label maxCustomerCount;
     public PieChart pieChart;
+
     @FXML
     private Label clubLoggedOn;
 
@@ -42,6 +43,8 @@ public class AdminPanelController implements Initializable {
     private TableColumn<ObservableList<String>, String> telefonnummerColumn;
     @FXML
     private TableColumn<ObservableList<String>, String> ticketNumberColumn;
+    @FXML
+    private TableColumn<ObservableList<String>, String> tojtype;
 
 
     @Override
@@ -54,15 +57,15 @@ public class AdminPanelController implements Initializable {
         navnColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().get(1)));
         telefonnummerColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().get(2)));
         ticketNumberColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().get(3)));
+        tojtype.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().get(4)));
 
 
         // Load data from CSV
         ObservableList<ObservableList<String>> brugere = FileIO.loadBrugereFromCSV();
         brugerTable.setItems(brugere);
 
-        // Example values for maximum number of guests and number of checked-in guests
-        int maxGuests = Company.getCapacity();  // This should be fetched from your data source
-        int checkedInGuests = FileIO.loadBrugereFromCSV().toArray().length;  // This should be fetched from your data source
+        int maxGuests = Company.getCapacity();
+        int checkedInGuests = FileIO.loadBrugereFromCSV().toArray().length;
         System.out.println("DEBUG ANTAL GÆSTER TJEKKET IND: " + checkedInGuests + " Antal gæster der er plads til: " + maxGuests);
 
         // Calculate remaining guests

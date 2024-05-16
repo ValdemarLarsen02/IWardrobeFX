@@ -25,7 +25,7 @@ public class FileIO {
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(", ");
                 if (data[0].equals("ID")) {
-                    continue; // Springer vores overskift over
+                    continue; // Springer overskriften over
                 }
                 customerDataMap.put(data[0], data);
             }
@@ -33,15 +33,28 @@ public class FileIO {
             e.printStackTrace();
         }
 
-        // Finder ud af om det er ny kunde eller en der findes i vores data..
+        // Finder ud af, om det er en ny kunde eller en der findes i vores data.
         for (Customer c : customers) {
             String id = c.getCustomerID();
             if (customerDataMap.containsKey(id)) {
                 // Opdatér eksisterende kunde
                 String[] existingData = customerDataMap.get(id);
-                int timesVisited = Integer.parseInt(existingData[4]) + 1;
-                existingData[4] = String.valueOf(timesVisited);
-                existingData[3] = String.valueOf(c.getTicketNumber());
+                // Antager at existingData har mindst 5 elementer
+                if (existingData.length == 5) {
+                    // Tilføjer plads til tojType hvis det ikke findes
+                    existingData = Arrays.copyOf(existingData, 6);
+                    existingData[5] = c.getBelongings();
+                }
+                try {
+                    int timesVisited = Integer.parseInt(existingData[4]) + 1;
+                    existingData[4] = String.valueOf(timesVisited);
+                    existingData[3] = String.valueOf(c.getTicketNumber());
+                    existingData[5] = c.getBelongings(); // Opdaterer tojType
+                    customerDataMap.put(id, existingData);
+                } catch (NumberFormatException e) {
+                    System.out.println("Error parsing times visited for customer ID: " + id);
+                    e.printStackTrace();
+                }
             } else {
                 // Tilføj ny kunde
                 String[] newData = {
@@ -49,15 +62,16 @@ public class FileIO {
                         c.getFirstName(),
                         c.getPhoneNumber(),
                         String.valueOf(c.getTicketNumber()),
-                        "1" // Start med 1 besøg
+                        "1", // Start med 1 besøg
+                        c.getBelongings() // Tilføjer tojType
                 };
                 customerDataMap.put(id, newData);
             }
         }
 
-        // Skriver daten til den csv der holder vores all time data.
+        // Skriver dataen til den csv, der holder vores all time data.
         try (PrintWriter pw = new PrintWriter(new FileWriter(allTimeCustomerData))) {
-            pw.println("ID, Name, Phone Number, Ticket Number, Times Visited");
+            pw.println("ID, Name, Phone Number, Ticket Number, Times Visited, TojType");
             for (String[] data : customerDataMap.values()) {
                 pw.println(String.join(", ", data));
             }
@@ -65,14 +79,14 @@ public class FileIO {
             e.printStackTrace();
         }
 
-        // Indskriver kudernen til den fil der holder vores aktive kunder
+        // Indskriv kunderne til den fil, der holder vores aktive kunder
         Set<String> existingCustomerIds = new HashSet<>();
         try (BufferedReader br = new BufferedReader(new FileReader(customerDataPath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(", ");
                 if (data[0].equals("ID")) {
-                    continue; // Husker at springe vores overskift over.
+                    continue; // Husker at springe overskriften over.
                 }
                 existingCustomerIds.add(data[0]);
             }
@@ -81,15 +95,15 @@ public class FileIO {
         }
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(customerDataPath, true))) {
-            // Hvis vores fil er tom, skriver vi overskirften(koloner)
+            // Hvis vores fil er tom, skriver vi overskriften (kolonner)
             File currentDataFile = new File(customerDataPath);
             if (currentDataFile.length() == 0) {
-                pw.println("ID, Name, Phone Number, Ticket Number");
+                pw.println("ID, Name, Phone Number, Ticket Number, TojType");
             }
 
             for (Customer c : customers) {
                 if (!existingCustomerIds.contains(c.getCustomerID())) {
-                    pw.println(c.getCustomerID() + ", " + c.getFirstName() + ", " + c.getPhoneNumber() + ", " + c.getTicketNumber());
+                    pw.println(c.getCustomerID() + ", " + c.getFirstName() + ", " + c.getPhoneNumber() + ", " + c.getTicketNumber() + ", " + c.getBelongings());
                 }
             }
         } catch (IOException e) {
@@ -98,9 +112,10 @@ public class FileIO {
     }
 
 
+
     public static void saveUserLastTicketNumber(Customer customer) {
         // Her opretter vi en liste til at holde den data vi henter for senere at kunne opdatere!
-        System.out.println("Saving user last ticket number: " + customer.getFirstName());
+        System.out.println("Saving user last ticket number: " + customer.getFirstName() + customer.getBelongings());
         List<String> fileContent = new ArrayList<>();
         String line;
         boolean customerFound = false;
@@ -109,8 +124,9 @@ public class FileIO {
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(", ");
                 if (data[0].equals(String.valueOf(customer.getCustomerID()))) {
-                    // Opdaterer ticketnummeret for den givne kunde
+                    // Opdaterer ticketnummeret og tojType for den givne kunde
                     data[3] = String.valueOf(customer.getTicketNumber());
+                    data[4] = customer.getBelongings(); // Opdaterer tojType
                     line = String.join(", ", data);
                     customerFound = true;
                 }
@@ -123,8 +139,10 @@ public class FileIO {
         // Hvis kunden ikke blev fundet, tilføj en ny linje for kunden
         if (!customerFound) {
             String newCustomerLine = customer.getCustomerID() + ", " +
-                    Customer.getFirstName() + ", " +
-                    customer.getTicketNumber();
+                    customer.getFirstName() + ", " +
+                    "unknown" + ", " + // Placeholder for Phone Number if not available
+                    customer.getTicketNumber() + ", " +
+                    customer.getBelongings(); // Tilføjer tojType
             fileContent.add(newCustomerLine);
         }
 

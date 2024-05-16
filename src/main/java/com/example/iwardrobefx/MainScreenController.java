@@ -37,11 +37,10 @@ public class MainScreenController {
     @FXML
     private PasswordField passwordField;
 
-    private void alertBoks() {
+    private void alertBoks(String text) {
         Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Tak for besøget");
         alert.setHeaderText(null);
-        alert.setContentText("Tak for besøget. Vi håber at se dig igen snart!");
+        alert.setContentText(text);
 
         alert.showAndWait();
     }
@@ -114,7 +113,9 @@ public class MainScreenController {
                 System.out.println("Customer removed: " + removed);
 
                 if (removed) {
-                    alertBoks();
+                    alertBoks("Mange tak for besøget du har hentet: " + Customer.getBelongings());
+                } else {
+                    alertBoks("Vi kunne ikke finde noget på det nummer?");
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Indtast venligst et gyldigt tal.");
@@ -127,14 +128,14 @@ public class MainScreenController {
         dialog.setTitle("Opret Ticket");
         dialog.setHeaderText("Indtast informationerne for at oprette en ticket");
 
-        // Baggrundsfarve på vores dialog.
-        dialog.getDialogPane().setStyle("-fx-background-color: #737373;"); // Sæt en lyseblå baggrundsfarve
+        // Baggrundsfarve på vores dialog
+        dialog.getDialogPane().setStyle("-fx-background-color: #737373;");
 
         // Opretter vores knapper ok og cancel
-        ButtonType createButtonType = new ButtonType("Opret", ButtonData.OK_DONE);
+        ButtonType createButtonType = new ButtonType("Opret", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
 
-        // Placerer vores inputs i et grid.
+        // Placerer vores inputs i et grid
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -144,44 +145,57 @@ public class MainScreenController {
         TextField phoneNumber = new TextField();
         phoneNumber.setPromptText("Telefonnummer");
 
+        // ChoiceBox for hvilken type af tøj man ligger
+        ChoiceBox<String> clothingType = new ChoiceBox<>();
+        clothingType.getItems().addAll("Jakke", "Accessories");
+        clothingType.setValue("Jakke"); // Sæt standardværdien
+
         grid.add(new Label("Fornavn:"), 0, 0);
         grid.add(firstName, 1, 0);
         grid.add(new Label("Telefonnummer:"), 0, 1);
         grid.add(phoneNumber, 1, 1);
+        grid.add(new Label("Tøjtype:"), 0, 2);
+        grid.add(clothingType, 1, 2);
 
         dialog.getDialogPane().setContent(grid);
 
-        // Starter med fokus på navne feltet.
+        // Starter med fokus på navne feltet
         Platform.runLater(firstName::requestFocus);
 
         // Laver vores data om til en array af data
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == createButtonType) {
-                return new String[] {firstName.getText(), phoneNumber.getText()};
+                return new String[] {firstName.getText(), phoneNumber.getText(), clothingType.getValue()};
             }
             return null;
         });
 
-        // Venter på det indtastet resultat.
+        // Venter på det indtastet resultat
         Optional<String[]> result = dialog.showAndWait();
 
-        result.ifPresent(names -> {
-            String fName = names[0];
-            String phone = names[1];
+        result.ifPresent(data -> {
+            String fName = data[0];
+            String phone = data[1];
+            String tojType = data[2];
 
+            // For debugging purposes
+            System.out.println("Fornavn: " + fName);
+            System.out.println("Telefonnummer: " + phone);
+            System.out.println("Tøjtype: " + tojType);
 
             String customerID = generateCustomerNumber(fName, phone);
             if (!fName.isEmpty() && !phone.isEmpty()) {
-                Customer customer = new Customer(customerID, fName, phone, 0); // Standard ticket nummer indtil det genereres af ticketHandler
+                System.out.println("DEBUG: Vi kommer hertil. " + tojType);
+                Customer customer = new Customer(customerID, fName, phone, 0, tojType); // Standard ticket nummer indtil det genereres af ticketHandler
                 TicketHandler.ticketGeneration(customer);
                 FileIO.saveUserLastTicketNumber(customer);
 
-                // Viser dialog med en lille velkommen besked.
+                // Viser dialog med en lille velkommen besked
                 Platform.runLater(() -> {
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Velkommen!");
                     alert.setHeaderText(null);
-                    alert.setContentText("Velkommen " + fName + "! Dit kø nummer er " + customer.getTicketNumber() + ".");
+                    alert.setContentText("Velkommen " + fName + "! Dit kø nummer er " + customer.getTicketNumber() + ". Du har lagt en " + tojType + " hos os.");
                     alert.showAndWait();
                 });
             }

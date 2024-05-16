@@ -10,14 +10,16 @@ public class Customer {
     public int ticketNumber;
     public String lastSeen;
     public ArrayList<Customer> customers = new ArrayList<Customer>();
-
-    public Customer(String customerID, String firstName, String phoneNumber, int ticketNumber) {
+    public static String Belongings;
+    public Customer(String customerID, String firstName, String phoneNumber, int ticketNumber, String Belongings) {
         this.customerID = customerID;
         Customer.firstName = firstName;
         this.phoneNumber = phoneNumber;
         this.ticketNumber = ticketNumber;
+        this.Belongings = Belongings;
         customers.add(this);
         io.saveCustomerData(this, customers);
+        System.out.println("DEBUG BRUGER: " + Belongings);
     }
 
     public String getCustomerID() {
@@ -35,6 +37,9 @@ public class Customer {
         return ticketNumber;
     }
 
+    public static String getBelongings() {
+        return Belongings;
+    }
     public ArrayList<Customer> getCustomers() {
         return customers;
     }
