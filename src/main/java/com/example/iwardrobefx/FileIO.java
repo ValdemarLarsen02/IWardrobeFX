@@ -19,7 +19,7 @@ public class FileIO {
     public void saveCustomerData(Customer customer, ArrayList<Customer> customers) {
         Map<String, String[]> customerDataMap = new HashMap<>();
 
-        // Læs eksisterende data fra allTimeCustomerData-filen
+        // starter med at læse eksisterende data fra allTimeCustomerData-filen
         try (BufferedReader br = new BufferedReader(new FileReader(allTimeCustomerData))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -39,9 +39,8 @@ public class FileIO {
             if (customerDataMap.containsKey(id)) {
                 // Opdatér eksisterende kunde
                 String[] existingData = customerDataMap.get(id);
-                // Antager at existingData har mindst 5 elementer
                 if (existingData.length == 5) {
-                    // Tilføjer plads til tojType hvis det ikke findes
+
                     existingData = Arrays.copyOf(existingData, 6);
                     existingData[5] = c.getBelongings();
                 }
@@ -49,10 +48,10 @@ public class FileIO {
                     int timesVisited = Integer.parseInt(existingData[4]) + 1;
                     existingData[4] = String.valueOf(timesVisited);
                     existingData[3] = String.valueOf(c.getTicketNumber());
-                    existingData[5] = c.getBelongings(); // Opdaterer tojType
+                    existingData[5] = c.getBelongings();
                     customerDataMap.put(id, existingData);
                 } catch (NumberFormatException e) {
-                    System.out.println("Error parsing times visited for customer ID: " + id);
+                    System.out.println("DEBUG FEJL: ved ny bruger data i FILEIO " + id);
                     e.printStackTrace();
                 }
             } else {
@@ -62,8 +61,8 @@ public class FileIO {
                         c.getFirstName(),
                         c.getPhoneNumber(),
                         String.valueOf(c.getTicketNumber()),
-                        "1", // Start med 1 besøg
-                        c.getBelongings() // Tilføjer tojType
+                        "1", // vi starter bare med et besøg
+                        c.getBelongings()
                 };
                 customerDataMap.put(id, newData);
             }
@@ -86,7 +85,7 @@ public class FileIO {
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(", ");
                 if (data[0].equals("ID")) {
-                    continue; // Husker at springe overskriften over.
+                    continue; // Springer overskirften over.
                 }
                 existingCustomerIds.add(data[0]);
             }
@@ -198,32 +197,7 @@ public class FileIO {
     }
 
 
-    public void timesVisited(Customer customer) {
-        try (BufferedReader br = new BufferedReader(new FileReader(allTimeCustomerData));
-             PrintWriter pw = new PrintWriter(new FileWriter(allTimeCustomerData + ".temp"))) {
 
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(", ");
-                if (data.length >= 5 && data[2].equals(customer.getPhoneNumber())) {
-                    int timesVisited = Integer.parseInt(data[4].trim()) + 1;
-                    pw.println(data[0] + ", " + data[1] + ", " + data[2] + ", " + data[3] + ", " + timesVisited);
-                } else {
-                    pw.println(line);
-                }
-            }
-
-        } catch (IOException | ArrayIndexOutOfBoundsException e) {
-            er.timesVisistedError();
-        }
-        File file = new File(allTimeCustomerData);
-        File tempFile = new File(allTimeCustomerData + ".temp");
-        if (tempFile.renameTo(file)) {
-            System.out.println("Times visited updated successfully.");
-        } else {
-            System.out.println("Failed to update times visited.");
-        }
-    }
 
     public static boolean removeCustomerByTicketNumber(int ticketNumber) {
         List<String> fileContent = new ArrayList<>();
@@ -286,6 +260,9 @@ public class FileIO {
         }
         return null; // vi returner bare null hvis koden ikke findes.. håndteres over i vores controller.
     }
+
+
+
 
 
 
