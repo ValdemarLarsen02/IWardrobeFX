@@ -30,7 +30,7 @@ public class FileIO {
                 customerDataMap.put(data[0], data);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorHandler.saveCustomerDataError();
         }
 
         // Finder ud af, om det er en ny kunde eller en der findes i vores data.
@@ -52,7 +52,7 @@ public class FileIO {
                     customerDataMap.put(id, existingData);
                 } catch (NumberFormatException e) {
                     System.out.println("DEBUG FEJL: ved ny bruger data i FILEIO " + id);
-                    e.printStackTrace();
+                    ErrorHandler.saveCustomerDataError();
                 }
             } else {
                 // Tilføj ny kunde
@@ -75,7 +75,7 @@ public class FileIO {
                 pw.println(String.join(", ", data));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorHandler.saveCustomerDataError();
         }
 
         // Indskriv kunderne til den fil, der holder vores aktive kunder
@@ -90,7 +90,7 @@ public class FileIO {
                 existingCustomerIds.add(data[0]);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorHandler.saveCustomerDataError();
         }
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(customerDataPath, true))) {
@@ -106,7 +106,7 @@ public class FileIO {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorHandler.saveCustomerDataError();
         }
     }
 
@@ -151,31 +151,10 @@ public class FileIO {
                 pw.println(newLine);
             }
         } catch (IOException e) {
-            System.out.println("Error writing to the file: " + e.getMessage());
+            ErrorHandler.saveCustomerDataError();
         }
     }
 
-
-
-    public void getAllCustomerData(ArrayList<Customer> customers) {
-        try {
-            Scanner scan = new Scanner(new File(allTimeCustomerData));
-            while (scan.hasNextLine()) {
-                System.out.println(scan.nextLine());
-            }
-            scan.close();
-        } catch (FileNotFoundException e) {
-            er.getCustomerDataError();
-        }
-    }
-
-    public void getCurrentCustomerData(ArrayList<Customer> customers) {
-        if (!customers.isEmpty()) {
-            System.out.println(customers.get(customers.size() - 1));
-        } else {
-            er.getCustomerDataError();
-        }
-    }
 
     public static ObservableList<ObservableList<String>> loadBrugereFromCSV() {
         ObservableList<ObservableList<String>> brugere = FXCollections.observableArrayList();
@@ -190,7 +169,7 @@ public class FileIO {
                 brugere.add(row);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            ErrorHandler.getAllCustomerDataError();
         }
 
         return brugere;
@@ -223,7 +202,7 @@ public class FileIO {
                     pw.println(line);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                ErrorHandler.removeCustomerError();
             }
         }
 
@@ -257,6 +236,7 @@ public class FileIO {
             }
         } catch (IOException | NumberFormatException e) {
             // Her skal vores errorhandler bruges.
+            ErrorHandler.adminLogin();
         }
         return null; // vi returner bare null hvis koden ikke findes.. håndteres over i vores controller.
     }

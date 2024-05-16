@@ -3,15 +3,15 @@ package com.example.iwardrobefx;
 public class ErrorHandler {
 
 
-    public void saveCustomerDataError() {
+    public static void saveCustomerDataError() {
         System.out.println("An error occurred while saving customer data to CustomerData.csv");
     }
 
-    public void getAllCustomerDataError() {
+    public static void getAllCustomerDataError() {
         System.out.println("An error occurred while getting customer data from AllTimeCustomerData.csv");
     }
 
-    public void getCustomerDataError() {
+    public static void getCustomerDataError() {
         System.out.println("An error occurred while getting current customer data");
     }
 
@@ -19,7 +19,7 @@ public class ErrorHandler {
         System.out.println("An error occurred while updating a customers times visited count");
     }
 
-    public void removeCustomerError() {
+    public static void removeCustomerError() {
         System.out.println("An error occurred while removing customers from customerData.csv");
     }
 
@@ -27,7 +27,7 @@ public class ErrorHandler {
         System.out.println("An error occurred while generating admin code");
     }
 
-    public void adminLogin(){
+    public static void adminLogin(){
         System.out.println("An error occurred while logging in as admin");
     }
 
