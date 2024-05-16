@@ -98,6 +98,7 @@ public class MainScreenController {
         int nr = 0;
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Angiv dit garderobe nr");
+        dialog.setHeaderText("Data Mikes | Afhent jakke");  // Fjerner den grimme overskirft
         dialog.setContentText("Angiv dit garderobe nr");
 
         // Viser dialogen og venter på brugerens input
