@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox prefHeight="1074.0" prefWidth="1910.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.iwardrobefx.AdminPanelController">
+  <children>
+    <MenuBar fx:id="forsteMenuBar" style="-fx-background-color: #a3a3a3;" VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="Firma">
+          <items>
+            <MenuItem fx:id="logOfCompanyButton" mnemonicParsing="false" onAction="#closeMenu" text="Luk ned" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+        <AnchorPane style="-fx-background-color: #a3a3a3;">
+          <children>
+            <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Indtjekket Gæster" textAlignment="CENTER" wrapText="false">
+              <font>
+                <Font size="18.0" fx:id="x1" />
+              </font>
+            </Label>
+              <TableView fx:id="brugerTable" layoutX="14.0" layoutY="66.0" prefHeight="954.0" prefWidth="466.0">
+                <columns>
+                  <TableColumn fx:id="idColumn" prefWidth="90.0" text="ID" />
+                  <TableColumn fx:id="navnColumn" prefWidth="90.0" text="Navn" />
+                  <TableColumn fx:id="telefonnummerColumn" prefWidth="90.0" text="Telefonnummer" />
+                  <TableColumn fx:id="ticketNumberColumn" prefWidth="90.0" text="Ticket Number" />
+                </columns>
+              </TableView>
+          </children>
+        </AnchorPane>
+        <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
+          <content>
+            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="1027.0" prefWidth="948.0" style="-fx-background-color: #a3a3a3;">
+              <children>
+                <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Overblik" textAlignment="CENTER" wrapText="false" />
+                <PieChart fx:id="pieChart" layoutX="14.0" layoutY="41.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </ScrollPane>
+        <AnchorPane style="-fx-background-color: #a3a3a3;">
+          <children>
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Detaljer" textAlignment="CENTER" wrapText="false" />
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" style="-fx-background-color: #a3a3a3;" VBox.vgrow="NEVER">
+      <children>
+        <Label fx:id="clubLoggedOn" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Logget på som:" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+        </Label>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label fx:id="maxCustomerCount" font="$x3" maxWidth="-1.0" text="Forbindelse: " HBox.hgrow="NEVER" />
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>

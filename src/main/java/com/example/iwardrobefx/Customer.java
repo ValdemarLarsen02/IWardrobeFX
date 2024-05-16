@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Customer {
     FileIO io = new FileIO();
     public String customerID;
-    public String firstName;
+    public static String firstName;
     public String phoneNumber;
     public int ticketNumber;
     public String lastSeen;
@@ -13,7 +13,7 @@ public class Customer {
 
     public Customer(String customerID, String firstName, String phoneNumber, int ticketNumber) {
         this.customerID = customerID;
-        this.firstName = firstName;
+        Customer.firstName = firstName;
         this.phoneNumber = phoneNumber;
         this.ticketNumber = ticketNumber;
         customers.add(this);
@@ -23,7 +23,7 @@ public class Customer {
     public String getCustomerID() {
         return customerID;
     }
-    public String getFirstName() {
+    public static String getFirstName() {
         return firstName;
     }
 

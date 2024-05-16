@@ -1,8 +1,13 @@
 package com.example.iwardrobefx;
+import javafx.collections.FXCollections;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
+import java.util.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 
 public class FileIO {
@@ -12,30 +17,93 @@ public class FileIO {
     ErrorHandler er = new ErrorHandler();
 
     public void saveCustomerData(Customer customer, ArrayList<Customer> customers) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(customerDataPath));
-             PrintWriter pw2 = new PrintWriter(new FileWriter(allTimeCustomerData, true))) {
+        Map<String, String[]> customerDataMap = new HashMap<>();
 
-            pw.println("ID, Name, Phone Number, Ticket Number");
+        // Læs eksisterende data fra allTimeCustomerData-filen
+        try (BufferedReader br = new BufferedReader(new FileReader(allTimeCustomerData))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(", ");
+                if (data[0].equals("ID")) {
+                    continue; // Springer vores overskift over
+                }
+                customerDataMap.put(data[0], data);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            if (new File(allTimeCustomerData).length() == 0) {
-                pw2.println("ID, Name, Phone Number, Ticket Number, Times Visited");
+        // Finder ud af om det er ny kunde eller en der findes i vores data..
+        for (Customer c : customers) {
+            String id = c.getCustomerID();
+            if (customerDataMap.containsKey(id)) {
+                // Opdatér eksisterende kunde
+                String[] existingData = customerDataMap.get(id);
+                int timesVisited = Integer.parseInt(existingData[4]) + 1;
+                existingData[4] = String.valueOf(timesVisited);
+                existingData[3] = String.valueOf(c.getTicketNumber());
+            } else {
+                // Tilføj ny kunde
+                String[] newData = {
+                        c.getCustomerID(),
+                        c.getFirstName(),
+                        c.getPhoneNumber(),
+                        String.valueOf(c.getTicketNumber()),
+                        "1" // Start med 1 besøg
+                };
+                customerDataMap.put(id, newData);
+            }
+        }
+
+        // Skriver daten til den csv der holder vores all time data.
+        try (PrintWriter pw = new PrintWriter(new FileWriter(allTimeCustomerData))) {
+            pw.println("ID, Name, Phone Number, Ticket Number, Times Visited");
+            for (String[] data : customerDataMap.values()) {
+                pw.println(String.join(", ", data));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Indskriver kudernen til den fil der holder vores aktive kunder
+        Set<String> existingCustomerIds = new HashSet<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(customerDataPath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(", ");
+                if (data[0].equals("ID")) {
+                    continue; // Husker at springe vores overskift over.
+                }
+                existingCustomerIds.add(data[0]);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(customerDataPath, true))) {
+            // Hvis vores fil er tom, skriver vi overskirften(koloner)
+            File currentDataFile = new File(customerDataPath);
+            if (currentDataFile.length() == 0) {
+                pw.println("ID, Name, Phone Number, Ticket Number");
             }
 
             for (Customer c : customers) {
-                pw.println(c.getCustomerID() + ", " + c.getFirstName() + ", " + c.getPhoneNumber() + ", " + c.getTicketNumber());
-                pw2.println(c.getCustomerID() + ", " + c.getFirstName() + ", " + c.getPhoneNumber() + ", " + c.getTicketNumber() + ", 0");
+                if (!existingCustomerIds.contains(c.getCustomerID())) {
+                    pw.println(c.getCustomerID() + ", " + c.getFirstName() + ", " + c.getPhoneNumber() + ", " + c.getTicketNumber());
+                }
             }
-
         } catch (IOException e) {
-            er.saveCustomerDataError();
+            e.printStackTrace();
         }
     }
 
 
     public static void saveUserLastTicketNumber(Customer customer) {
         // Her opretter vi en liste til at holde den data vi henter for senere at kunne opdatere!
+        System.out.println("Saving user last ticket number: " + customer.getFirstName());
         List<String> fileContent = new ArrayList<>();
         String line;
+        boolean customerFound = false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(customerDataPath))) {
             while ((line = br.readLine()) != null) {
@@ -44,11 +112,20 @@ public class FileIO {
                     // Opdaterer ticketnummeret for den givne kunde
                     data[3] = String.valueOf(customer.getTicketNumber());
                     line = String.join(", ", data);
+                    customerFound = true;
                 }
                 fileContent.add(line);
             }
         } catch (IOException e) {
             System.out.println("Error reading the file: " + e.getMessage());
+        }
+
+        // Hvis kunden ikke blev fundet, tilføj en ny linje for kunden
+        if (!customerFound) {
+            String newCustomerLine = customer.getCustomerID() + ", " +
+                    Customer.getFirstName() + ", " +
+                    customer.getTicketNumber();
+            fileContent.add(newCustomerLine);
         }
 
         // Opdatere selve CSV filen.
@@ -59,8 +136,9 @@ public class FileIO {
         } catch (IOException e) {
             System.out.println("Error writing to the file: " + e.getMessage());
         }
-
     }
+
+
 
     public void getAllCustomerData(ArrayList<Customer> customers) {
         try {
@@ -80,6 +158,25 @@ public class FileIO {
         } else {
             er.getCustomerDataError();
         }
+    }
+
+    public static ObservableList<ObservableList<String>> loadBrugereFromCSV() {
+        ObservableList<ObservableList<String>> brugere = FXCollections.observableArrayList();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(customerDataPath))) {
+            String line;
+            // Skip header line
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(", ");
+                ObservableList<String> row = FXCollections.observableArrayList(data);
+                brugere.add(row);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return brugere;
     }
 
 
@@ -110,30 +207,35 @@ public class FileIO {
         }
     }
 
-    public void removeCustomer(Customer customer) {
-        try (BufferedReader br = new BufferedReader(new FileReader(customerDataPath));
-             PrintWriter pw = new PrintWriter(new FileWriter(customerDataPath + ".temp"))) {
+    public static boolean removeCustomerByTicketNumber(int ticketNumber) {
+        List<String> fileContent = new ArrayList<>();
+        boolean found = false;
 
+        try (BufferedReader br = new BufferedReader(new FileReader(customerDataPath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(", ");
-                if (data.length >= 3 && data[2].equals(customer)) {
-                    continue;
+                if (data.length > 3 && data[3].equals(String.valueOf(ticketNumber))) {
+                    found = true;
+                } else {
+                    fileContent.add(line);
                 }
-                pw.println(line);
             }
-
         } catch (IOException e) {
-            er.removeCustomerError();
+            e.printStackTrace();
         }
 
-        File file = new File(customerDataPath);
-        File tempFile = new File(customerDataPath + ".temp");
-        if (tempFile.renameTo(file)) {
-            System.out.println("Customer removed successfully.");
-        } else {
-            System.out.println("Failed to remove customer.");
+        if (found) {
+            try (PrintWriter pw = new PrintWriter(new FileWriter(customerDataPath))) {
+                for (String line : fileContent) {
+                    pw.println(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+        return found;
     }
     /*
     public void generateAdminCode(Company company) {
@@ -147,6 +249,7 @@ public class FileIO {
     */
     public static Company adminLogin(int adminCode) {
         String line;
+        System.out.println(adminCode);
         try (BufferedReader br = new BufferedReader(new FileReader(adminDataPath))) {
             br.readLine(); // Spring over header-linjen
             while ((line = br.readLine()) != null) {

@@ -21,11 +21,11 @@
             <MenuItem mnemonicParsing="false" text="Redo" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="FAQ">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-          </items>
-        </Menu>
+          <Menu mnemonicParsing="false" text="FAQ">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openFAQTabsWindow" text="FAQ" />
+              </items>
+          </Menu>
       </menus>
          <tooltip>
             <Tooltip text="Virksomheds login" />
@@ -64,7 +64,11 @@
                       <Font name="System Bold" size="36.0" />
                   </font>
               </Text>
-
+            <Label fx:id="cityLabel" layoutX="1451.0" layoutY="166.0" prefHeight="35.0" prefWidth="653.0" text="By" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
           </children>
       </AnchorPane>
 

@@ -1,0 +1,83 @@
+!pragma layout smetana
+class Main{
++ static void main(String[] args)
+}
+
+class Customer {
+    - String customerID
+    - String firstName
+    - String phoneNumber
+    - int ticketNumber
+    + Customer(String, String, String, int)
+    + getCustomerID(): String
+    + getFirstName(): String
+    + getPhoneNumber(): String
+    + getTicketNumber(): int
+}
+
+class Company {
+    - int capacity
+    - String name
+    + Company(int, String)
+    + getName(): String
+}
+
+class TicketHandler {
+    + ticketGeneration(Customer)
+    + ticketRemoval(Customer)
+    + pay(Customer)
+}
+
+class Admin {
+    + showAdminMenu(Company)
+}
+
+class CustomerService {
+    + assistCustomer()
+}
+
+
+class Organizer {
+    - boolean multipleWardrobes
+    + hasMulitpleWardrobes()
+    + organizeItems(Item)
+}
+
+class Location {
+    - String venue
+    + getLocation(): String
+}
+
+class ErrorHandler {
+    + saveErrorLog(Error)
+}
+
+class FileIO {
+    + createCompany()
+    + saveData(String)
+    + removeData(String)
+}
+
+class Statistic {
+    + customerAmount()
+    + calculateWaitTime()
+    + showStatistics()
+    + saveStatistics()
+}
+
+Main "1" -- "*" Company : uses >
+
+Company "1" -- "*" Customer : serves >
+Company "1" -- "*" TicketHandler : uses >
+Company "1" -- "1" Admin : manages >
+Company "1" -- "1" Organizer : coordinates >
+Company "1" -- "1" ErrorHandler : handles >
+Company "1" -- "1" FileIO : uses >
+
+Admin "1" -- "1" CustomerService : uses >
+Admin "1" -- "1" Statistic : manages >
+
+TicketHandler "1" -- "1" Location : uses >
+
+@enduml
+

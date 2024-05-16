@@ -1,10 +1,14 @@
 package com.example.iwardrobefx;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 
-
+import java.io.IOException;
 import java.util.Optional;
 import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
@@ -14,7 +18,9 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class MainScreenController {
 
@@ -25,10 +31,32 @@ public class MainScreenController {
     public Button createTicket;
     public Text passwordText;
     public Text passwordTextWrong;
-
+    public Label cityLabel;
+    public String FundetBy;
 
     @FXML
     private PasswordField passwordField;
+
+    private void alertBoks() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Tak for besøget");
+        alert.setHeaderText(null);
+        alert.setContentText("Tak for besøget. Vi håber at se dig igen snart!");
+
+        alert.showAndWait();
+    }
+    @FXML
+    public void initialize() {
+        System.out.println("DEBUG: Kører vores start metode?");
+        String city = Location.getCity();
+        if (city.equals("Elsinore")) {
+            cityLabel.setText("Du befinder dig i Helsingør");
+            FundetBy = "Helsingør";
+        } else {
+            cityLabel.setText(city);
+            FundetBy = Location.getCity();
+        }
+    }
 
     @FXML
     private void togglePasswordVisibility() {
@@ -39,17 +67,31 @@ public class MainScreenController {
         passwordField.setOnAction(event -> {
             String password = passwordField.getText();
 
+            System.out.println("DEBUG: Input password: " + password);
+
             String passCheck = String.valueOf(FileIO.adminLogin(Integer.parseInt(password)));
 
-            if (passCheck == null) {
+            System.out.println("DEBUG: passCheck value: " + passCheck);
+
+            if (passCheck == null || passCheck.equals("null")) {
+                System.out.println("DEBUG: Password check failed, showing error message.");
                 passwordTextWrong.setVisible(true);
             } else {
+                System.out.println("DEBUG: Password check succeeded, hiding error message.");
                 passwordTextWrong.setVisible(false);
                 System.out.println("Sender bruger videre til admin siden her .." + Company.getName());
+
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("adminpanel.fxml"));
+                    Parent root = fxmlLoader.load();
+                    Stage stage = (Stage) passwordField.getScene().getWindow();
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                } catch (IOException e) {
+                    System.out.println("DEBUG FEJL: " + e);
+                }
             }
-
         });
-
     }
 
     public void getItem() {
@@ -68,6 +110,12 @@ public class MainScreenController {
                 System.out.println("Det indtastede tal er: " + inputNumber);
                 // Her skal vi kalde vores metode der gør noget ved dette nummer(Findet det osv osv)
 
+                boolean removed = FileIO.removeCustomerByTicketNumber(inputNumber);
+                System.out.println("Customer removed: " + removed);
+
+                if (removed) {
+                    alertBoks();
+                }
             } catch (NumberFormatException e) {
                 System.err.println("Indtast venligst et gyldigt tal.");
             }
@@ -149,5 +197,42 @@ public class MainScreenController {
     }
 
 
+    @FXML
+    private void openFAQTabsWindow() {
+        TabPane tabPane = new TabPane();
 
+        Tab generalTab = new Tab("Generelt");
+        Tab accountTab = new Tab("Brugerkonto");
+
+        VBox generalContent = new VBox();
+        Label generalQuestion1 = new Label("Spørgsmål 1: Var det her en fed opgave?");
+        TextArea generalAnswer1 = new TextArea("Svar 1: Meget spændende, uhhhh. 2+2=4");
+
+        generalAnswer1.setWrapText(true);
+        generalAnswer1.setEditable(false);
+
+        generalContent.getChildren().addAll(generalQuestion1, generalAnswer1);
+
+        generalTab.setContent(generalContent);
+
+        VBox accountContent = new VBox();
+        Label accountQuestion1 = new Label("Spørgsmål 1: Hvordan ændrer jeg min adgangskode?");
+        TextArea accountAnswer1 = new TextArea("Svar 1: ved at huske den brormis");
+
+        accountAnswer1.setWrapText(true);
+        accountAnswer1.setEditable(false);
+
+        accountContent.getChildren().addAll(accountQuestion1, accountAnswer1);
+
+        accountTab.setContent(accountContent);
+
+        tabPane.getTabs().addAll(generalTab, accountTab);
+
+        Scene scene = new Scene(tabPane, 400, 300);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("FAQ");
+        stage.show();
+    }
 }

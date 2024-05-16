@@ -1,22 +1,19 @@
 package com.example.iwardrobefx;
 
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 public class Company {
-    public int capacity;
+    public static int capacity;
     public static String name; // Ikke statisk, unik for hver instans
 
     public int currentCapacity;
 
     public Company(int capacity, String name) {
-        this.capacity = capacity;
+        Company.capacity = capacity;
         Company.name = name; // Korrekt adgang til en instansvariabel
         this.currentCapacity = 0;
     }
 
-    public int getCapacity() {
+    public static int getCapacity() {
         return capacity;
     }
 

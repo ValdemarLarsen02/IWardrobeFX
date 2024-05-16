@@ -5,4 +5,7 @@
 .choice-box .label {
     -fx-text-fill: white !important;
 }
-
+.label {
+    -fx-font-family: "Segoe UI Emoji", "Arial";
+    -fx-font-size: 16px;
+}
